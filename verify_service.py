@@ -2,31 +2,57 @@ import grpc
 import engine_pb2
 import engine_pb2_grpc
 
-def run_test():
-    # Connect to the C++ Server
+# The Business Translation Layer
+OFFER_MAPPING = {
+    0: "Demand Full Payment (0% Disc)",
+    1: "Safe Baseline (Standard Procedure)",
+    2: "3-Month Installment Plan",
+    3: "6-Month Installment Plan",
+    4: "Targeted 5% Settlement Discount",
+    5: "Optimized 12% Settlement Discount"
+}
+
+def run_demo():
     channel = grpc.insecure_channel('localhost:50051')
     stub = engine_pb2_grpc.SettlementEngineStub(channel)
 
-    # Scenarios to test model inference and the Safety Shield
+    # Scenarios described as "Business Cases"
     scenarios = [
-        {"name": "Standard Case", "debt": 25000.0, "dpd": 60, "sent": 0.1},
-        {"name": "Out-of-Distribution", "debt": 900000.0, "dpd": 500, "sent": -0.9}
+        {
+            "desc": "High Sentiment / Low Debt (Easy Recovery)",
+            "data": {"debt": 15000.0, "dpd": 30, "sent": 0.8}
+        },
+        {
+            "desc": "Anxious Borrower / Mid Debt (Negotiation Required)",
+            "data": {"debt": 45000.0, "dpd": 95, "sent": -0.4}
+        },
+        {
+            "desc": "Extreme Case (System Protection Check)",
+            "data": {"debt": 950000.0, "dpd": 500, "sent": -0.9}
+        }
     ]
 
-    print(f"{'Scenario':<20} | {'Mode':<15} | {'Action Index'}")
-    print("-" * 50)
-
+    print("\n--- RIVERLINE AI SETTLEMENT ENGINE: LIVE DECISION LOG ---")
+    
     for s in scenarios:
+        print(f"\n[SCENARIO]: {s['desc']}")
+        print(f"  Inputs -> Debt: ${s['data']['debt']}, DPD: {s['data']['dpd']}, Sentiment: {s['data']['sent']}")
+        
         try:
-            # Call the C++ binary over the network
             response = stub.GetOptimalDiscount(engine_pb2.StateRequest(
-                debt_amount=s["debt"],
-                days_past_due=s["dpd"],
-                sentiment=s["sent"]
+                debt_amount=s['data']['debt'],
+                days_past_due=s['data']['dpd'],
+                sentiment=s['data']['sent']
             ))
-            print(f"{s['name']:<20} | {response.mode:<15} | {response.action_index}")
-        except grpc.RpcError as e:
-            print(f"Network Error: {e.details()}")
+            
+            decision = OFFER_MAPPING.get(response.action_index, "Unknown Action")
+            
+            # Highlight the "Mode" to show the Safety Shield vs AI Intelligence
+            status_tag = f"[{response.mode}]"
+            print(f"  ENGINE DECISION: {status_tag} -> {decision}")
+            
+        except Exception as e:
+            print(f"  Connection Error: {e}")
 
 if __name__ == "__main__":
-    run_test()
+    run_demo()
