@@ -1,0 +1,51 @@
+# Build artifacts
+build/
+bin/
+lib/
+*.so
+*.a
+*.o
+riverline_server
+riverline_core.cpython*
+
+# Python junk
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Generated Proto files (The user should generate these on their own machine)
+engine.pb.cc
+engine.pb.h
+engine.grpc.pb.cc
+engine.grpc.pb.h
+engine_pb2.py
+engine_pb2_grpc.py
+
+# Large Libraries
+libtorch/# Build artifacts
+build/
+bin/
+lib/
+*.so
+*.a
+*.o
+riverline_server
+riverline_core.cpython*
+
+# Python junk
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Generated Proto files (The user should generate these on their own machine)
+engine.pb.cc
+engine.pb.h
+engine.grpc.pb.cc
+engine.grpc.pb.h
+engine_pb2.py
+engine_pb2_grpc.py
+
+# Large Libraries
+libtorch/*.zip

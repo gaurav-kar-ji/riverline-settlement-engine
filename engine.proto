@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package riverline;
+
+// The Settlement Engine service definition.
+service SettlementEngine {
+  // Sends a borrower state and gets an optimized discount back.
+  rpc GetOptimalDiscount (StateRequest) returns (ActionResponse) {}
+}
+
+message StateRequest {
+  float debt_amount = 1;
+  int32 days_past_due = 2;
+  float sentiment = 3;
+}
+
+message ActionResponse {
+  int32 action_index = 1;
+  string mode = 2; // "AI_OPTIMIZED" or "SAFE_MODE_OOD"
+}
