@@ -1,4 +1,4 @@
-#Case Study: Riverline High-Performance Settlement Engine
+# Case Study: Riverline High-Performance Settlement Engine
 ## The Strategy Gap
 Riverline currently treats debt recovery as a language and workflow automation problem. This creates a significant revenue gap. Debt negotiation is actually a dynamic pricing problem that requires mathematical precision. Relying on LLMs to guess settlement discounts during a live call leads to uncalibrated offers and lost yield. Furthermore, Python based inference introduces latency that breaks the natural rhythm of a voice agent.
 ## Engineered Solution
